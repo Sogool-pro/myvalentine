@@ -72,7 +72,7 @@ const memories: Memory[] = [
       "I can't contain my smile as we finally have our first video call, grabe gyud ang smile ni janjan talaga, ginakilig2 pagyud na pag ayo babee, nami gyud kaayo imong smile kag you're soooo damnnn perfect and prettyy talaga my babyyy!.",
     x: 75,
     y: 70,
-    video: `${import.meta.env.BASE_URL}video/Fvvideo.mp4`,
+    video: `${import.meta.env.BASE_URL}video/fvideos.mp4`,
   },
   {
     id: 5,
