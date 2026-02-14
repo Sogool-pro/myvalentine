@@ -120,7 +120,7 @@ export function GalaxyScreen() {
   const navigate = useNavigate();
   const [selectedMemory, setSelectedMemory] = useState<Memory | null>(null);
   const [viewedMemories, setViewedMemories] = useState<Set<number>>(new Set());
-  const partnerName = "Krisa Eros Rendon Pama";
+  const partnerName = "Ma. Krisa Eros Rendon Pama";
 
   const handleStarClick = (memory: Memory) => {
     setSelectedMemory(memory);
