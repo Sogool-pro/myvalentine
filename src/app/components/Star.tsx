@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { Sparkles } from "lucide-react";
+import { useState } from "react";
 
 interface StarProps {
   x: number;
@@ -9,9 +10,12 @@ interface StarProps {
   isCenter?: boolean;
   onClick?: () => void;
   delay?: number;
+  isViewed?: boolean;
 }
 
-export function Star({ x, y, size = "medium", label, isCenter = false, onClick, delay = 0 }: StarProps) {
+export function Star({ x, y, size = "medium", label, isCenter = false, onClick, delay = 0, isViewed = false }: StarProps) {
+  const [clicked, setClicked] = useState(false);
+
   const sizeMap = {
     small: "w-2 h-2",
     medium: "w-3 h-3",
@@ -22,6 +26,14 @@ export function Star({ x, y, size = "medium", label, isCenter = false, onClick, 
     small: "0 0 10px rgba(255, 215, 0, 0.5)",
     medium: "0 0 15px rgba(255, 215, 0, 0.6)",
     large: "0 0 30px rgba(255, 107, 157, 0.8)"
+  };
+
+  const handleClick = () => {
+    if (onClick) {
+      setClicked(true);
+      onClick();
+      setTimeout(() => setClicked(false), 600);
+    }
   };
 
   if (isCenter) {
@@ -72,16 +84,41 @@ export function Star({ x, y, size = "medium", label, isCenter = false, onClick, 
       transition={{ duration: 0.5, delay }}
       whileHover={{ scale: 1.5 }}
       whileTap={{ scale: 1.3 }}
-      onClick={onClick}
+      onClick={handleClick}
     >
       <div className="relative">
+        {/* Ripple effect on click */}
+        {clicked && (
+          <motion.div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[var(--pink)]"
+            initial={{ width: 0, height: 0, opacity: 1 }}
+            animate={{ width: 40, height: 40, opacity: 0 }}
+            transition={{ duration: 0.6 }}
+          />
+        )}
+        
+        {/* Viewed indicator ring */}
+        {isViewed && (
+          <motion.div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 rounded-full border border-[var(--pink)]/50"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", damping: 15 }}
+          />
+        )}
+
         <motion.div
           className={`${sizeMap[size]} rounded-full bg-[var(--gold)]`}
           style={{ boxShadow: glowSize[size] }}
           animate={{
-            opacity: [0.6, 1, 0.6]
+            opacity: [0.6, 1, 0.6],
+            scale: isViewed ? [1, 1.2, 1] : 1
           }}
-          transition={{ duration: 2 + Math.random() * 2, repeat: Infinity }}
+          transition={{ 
+            duration: 2 + Math.random() * 2, 
+            repeat: Infinity,
+            scale: { duration: 1.5, repeat: Infinity }
+          }}
         />
         <Sparkles 
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-[var(--pink)] pointer-events-none"

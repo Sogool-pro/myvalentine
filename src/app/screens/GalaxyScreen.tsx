@@ -5,13 +5,17 @@ import { Starfield } from "../components/Starfield";
 import { Star } from "../components/Star";
 import { MemoryModal } from "../components/MemoryModal";
 import { Button } from "../components/Button";
+import { BackButton } from "../components/BackButton";
+import { ConstellationLines } from "../components/ConstellationLines";
+import { ProgressIndicator } from "../components/ProgressIndicator";
 
 interface Memory {
   id: number;
   title: string;
   description: string;
-  image?: string;
-  hasAudio?: boolean;
+  images?: string[];
+  audio?: string;
+  video?: string;
   x: number;
   y: number;
 }
@@ -36,21 +40,21 @@ interface Memory {
 const memories: Memory[] = [
   {
     id: 1,
-    title: "Our First Date",
+    title: "Chikas",
     description:
-      "I remember the way you smiled when I nervously ordered the wrong coffee. That moment, I knew you were special. Your laugh made everything feel right.",
+      "Halinat sumama makinig sa ating mga chika, minamahal kong binibini.",
     x: 30,
     y: 25,
-    hasAudio: true,
+    audio: `${import.meta.env.BASE_URL}audio/examwk.mp3`,
   },
   {
     id: 2,
-    title: "Dancing in the Rain",
+    title: "The kaboengs and trippings",
     description:
-      "We were supposed to be upset about the ruined picnic, but instead we danced. Your joy is contagious, and that day proved nothing could dampen our spirits when we're together.",
+      "The chikas and trippings and kaboengs na mapapa I wish we're together nagyud babyyy para makumotan na taka kag ma kissan, hayyysssttt, pero daw nakuha nagyud nimo kung unsaon ko sunlogon/paugtason ani babee.",
     x: 70,
     y: 30,
-    image: "placeholder",
+    audio: `${import.meta.env.BASE_URL}audio/chikas.mp3`,
   },
   {
     id: 3,
@@ -59,32 +63,56 @@ const memories: Memory[] = [
       "Those late-night talks where hours felt like minutes. You understand me in ways I never thought possible. Every word, every silence between us feels like home.",
     x: 25,
     y: 65,
-    hasAudio: true,
+    audio: `${import.meta.env.BASE_URL}audio/katawa.mp3`,
   },
   {
     id: 4,
-    title: "Your Birthday Surprise",
+    title: "Our first video call",
     description:
-      "The look on your face when you saw what I'd planned. Making you happy is my favorite thing in the world. Your happiness is my universe.",
+      "I can't contain my smile as we finally have our first video call, grabe gyud ang smile ni janjan talaga, ginakilig2 pagyud na pag ayo babee, nami gyud kaayo imong smile kag you're soooo damnnn perfect and prettyy talaga my babyyy!.",
     x: 75,
     y: 70,
-    image: "placeholder",
+    video: `${import.meta.env.BASE_URL}video/Fvvideo.mp4`,
   },
   {
     id: 5,
-    title: "Sunday Mornings",
+    title: "Oh Sige Moments",
     description:
-      "Lazy mornings with coffee and your head on my shoulder. These simple moments mean everything. There's nowhere else I'd rather be.",
+      "Talagaa namannn, woman of culture talaga ang babyyy ko na to.",
     x: 85,
     y: 50,
+    video: `${import.meta.env.BASE_URL}video/sige.mp4`,
   },
   {
     id: 6,
-    title: "That Inside Joke",
+    title: "Our cutie moments together",
     description:
-      "The one that makes us burst out laughing in public. Our own little world that only we understand. I love having secrets that are just ours.",
+      "Most favourite part of the day, ang makita ang aking super duperr prettyyy babyyy loveyy, ka cuteee nalang gyud, can't help myself to take screenshots babii, hihi I love youuuuuuuuuuuuuu!! .",
     x: 15,
     y: 45,
+    images: [
+      `${import.meta.env.BASE_URL}images/img1.jpg`,
+      `${import.meta.env.BASE_URL}images/img2.jpg`,
+      `${import.meta.env.BASE_URL}images/img3.jpg`,
+      `${import.meta.env.BASE_URL}images/img4.jpg`,
+      `${import.meta.env.BASE_URL}images/img5.jpg`,
+      `${import.meta.env.BASE_URL}images/img6.jpg`,
+      `${import.meta.env.BASE_URL}images/img7.jpg`,
+      `${import.meta.env.BASE_URL}images/img8.jpg`,
+      `${import.meta.env.BASE_URL}images/img9.jpg`,
+      `${import.meta.env.BASE_URL}images/img10.jpg`,
+      `${import.meta.env.BASE_URL}images/img11.jpg`,
+      `${import.meta.env.BASE_URL}images/img12.jpg`,
+      `${import.meta.env.BASE_URL}images/img13.jpg`,
+      `${import.meta.env.BASE_URL}images/img14.jpg`,
+      `${import.meta.env.BASE_URL}images/img16.jpg`,
+      `${import.meta.env.BASE_URL}images/img17.jpg`,
+      `${import.meta.env.BASE_URL}images/img18.jpg`,
+      `${import.meta.env.BASE_URL}images/img19.jpg`,
+      `${import.meta.env.BASE_URL}images/img20.jpg`,
+      `${import.meta.env.BASE_URL}images/img21.jpg`,
+      `${import.meta.env.BASE_URL}images/img22.jpg`,
+    ],
   },
 ];
 
@@ -104,6 +132,11 @@ export function GalaxyScreen() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[var(--midnight)] to-[var(--deep-navy)] relative overflow-hidden">
       <Starfield density={120} />
+      <BackButton to="/" />
+      <ProgressIndicator
+        current={viewedMemories.size}
+        total={memories.length}
+      />
 
       <div className="relative z-10 h-screen flex flex-col items-center justify-center p-4">
         <motion.div
@@ -124,18 +157,17 @@ export function GalaxyScreen() {
           >
             Click a star to explore a memory
           </p>
-          {viewedMemories.size > 0 && viewedMemories.size < memories.length && (
-            <motion.p
-              className="text-[var(--gold)]/80 text-sm mt-2"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              {viewedMemories.size} of {memories.length} memories discovered
-            </motion.p>
-          )}
         </motion.div>
 
-        <div className="relative w-full max-w-4xl aspect-square">
+        <div className="relative w-full max-w-4xl aspect-square constellation-container">
+          {/* Constellation lines */}
+          <ConstellationLines
+            memories={memories}
+            viewedMemories={viewedMemories}
+            centerX={50}
+            centerY={50}
+          />
+
           {/* Center star with her name */}
           <Star
             x={50}
@@ -155,6 +187,7 @@ export function GalaxyScreen() {
               size="medium"
               onClick={() => handleStarClick(memory)}
               delay={0.5 + index * 0.1}
+              isViewed={viewedMemories.has(memory.id)}
             />
           ))}
         </div>
@@ -164,7 +197,7 @@ export function GalaxyScreen() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mt-8 flex flex-col items-center gap-4"
+            className="mt-8 flex flex-col items-center"
           >
             <Button onClick={() => navigate("/final")}>
               Continue to Final Message
